@@ -24,29 +24,35 @@ const Login = ({ setIsLoggedIn }) => {
       body: JSON.stringify({ email, password }),
     })
       .then(response => {
+        // Xử lý trường hợp status 204
         if (response.status === 204) {
+          console.log('Đăng nhập thành công với status 204');
           localStorage.setItem('isLoggedIn', 'true');
           setIsLoggedIn(true);
           navigate('/', { replace: true });
           return null;
         }
-        return response.json().then(data => {
-          if (!response.ok) {
+        
+        if (!response.ok) {
+          return response.json().then(data => {
             throw new Error(data.message || `HTTP error! Status: ${response.status}`);
-          }
-          return data;
-        });
+          });
+        }
+        
+        return response.json();
       })
       .then(data => {
-        if (!data) return;
-        if (data.success) {
-          localStorage.setItem('isLoggedIn', 'true');
-          localStorage.setItem('token', data.token || '');
-          setIsLoggedIn(true);
+        if (data === null) return; // Đã xử lý ở trên (case 204)
+        
+        console.log('Đăng nhập thành công với dữ liệu:', data);
+        localStorage.setItem('isLoggedIn', 'true');
+        localStorage.setItem('token', data.token || '');
+        setIsLoggedIn(true);
+        
+        // Chắc chắn navigate sau khi xử lý
+        setTimeout(() => {
           navigate('/', { replace: true });
-        } else {
-          setError(data.message || 'Đăng nhập thất bại');
-        }
+        }, 100);
       })
       .catch(err => {
         setError('Có lỗi xảy ra: ' + err.message);

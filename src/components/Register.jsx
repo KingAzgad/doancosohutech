@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../styles/Login.css';
 
-const Register = () => {
+const Register = ({ setIsLoggedIn }) => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -16,6 +16,7 @@ const Register = () => {
     // Kiểm tra các trường bắt buộc
     if (!name || !email || !password || !confirmPassword) {
       setError('Vui lòng nhập đầy đủ tên, email, mật khẩu và xác nhận mật khẩu');
+      console.log('Validation error: Missing required fields');
       return;
     }
 
@@ -23,14 +24,18 @@ const Register = () => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       setError('Email không hợp lệ');
+      console.log('Validation error: Invalid email format');
       return;
     }
 
     // Kiểm tra mật khẩu và xác nhận mật khẩu có khớp nhau không
     if (password !== confirmPassword) {
       setError('Mật khẩu và xác nhận mật khẩu không khớp');
+      console.log('Validation error: Passwords do not match');
       return;
     }
+
+    console.log('Sending register request with data:', { name, email, password, confirmPassword });
 
     fetch('https://localhost:7258/api/auth/registerCustomer', {
       method: 'POST',
@@ -41,31 +46,41 @@ const Register = () => {
         name,
         email,
         password,
-        confirmPassword // Thêm confirmPassword vào body
+        confirmPassword
       }),
     })
       .then(response => {
+        // Xử lý trường hợp status 204
         if (response.status === 204) {
-          navigate('/login');
+          console.log('Đăng ký thành công với status 204');
+          setTimeout(() => {
+            navigate('/login', { replace: true });
+          }, 100);
           return null; // Không cần parse JSON
         }
-        return response.json().then(data => {
-          if (!response.ok) {
+
+        if (!response.ok) {
+          return response.json().then(data => {
             throw new Error(data.message || `HTTP error! Status: ${response.status}`);
-          }
-          return data;
-        });
+          });
+        }
+
+        return response.json();
       })
       .then(data => {
-        if (!data) return; // Nếu response là 204, data sẽ là null
-        if (data.success) {
-          navigate('/login');
-        } else {
-          setError(data.message || 'Đăng ký thất bại');
-        }
+        if (data === null) return; // Đã xử lý ở trên (case 204)
+
+        console.log('Đăng ký thành công với dữ liệu:', data);
+        // Nếu backend trả về token hoặc thông tin khác, có thể lưu vào localStorage
+        localStorage.setItem('token', data.token || '');
+
+        // Chuyển hướng về trang login sau khi đăng ký thành công
+        setTimeout(() => {
+          navigate('/login', { replace: true });
+        }, 100);
       })
       .catch(err => {
-        setError(err.message);
+        setError('Có lỗi xảy ra: ' + err.message);
         console.error('Register error:', err);
       });
   };

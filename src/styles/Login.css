@@ -1,7 +1,7 @@
 :root {
-    --login-primary: #4F7CAC; /* Xanh nước biển sáng */
+    --login-primary: #4F7CAC;
     --login-primary-dark: #2D5D8A;
-    --login-accent: #E65C4F; /* Màu accent - đỏ cam nhẹ */
+    --login-accent: #E65C4F;
     --login-bg: #F5F7FA;
     --login-card: #FFFFFF;
     --login-text: #333333;

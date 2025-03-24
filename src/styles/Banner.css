@@ -1,4 +1,3 @@
-/* BANNER STYLES */
 .banner-ad {
     margin-bottom: 2rem;
     padding: 0 2rem;
@@ -55,7 +54,6 @@
     box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
   }
   
-  /* Japanese wave pattern for banner */
   .banner-container::before {
     content: '';
     position: absolute;

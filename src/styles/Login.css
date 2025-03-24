@@ -23,7 +23,6 @@
     overflow: hidden;
   }
   
-  /* Nền sóng kiểu Nhật Bản */
   .login-wave-background {
     position: absolute;
     top: 0;
@@ -45,7 +44,6 @@
     padding: 0 20px;
   }
   
-  /* Logo và thương hiệu */
   .login-brand {
     text-align: center;
     margin-bottom: 2rem;
@@ -76,7 +74,6 @@
     margin-top: 0.5rem;
   }
   
-  /* Card đăng nhập */
   .login-card {
     background-color: var(--login-card);
     border-radius: var(--login-radius);
@@ -110,7 +107,6 @@
     border-radius: 2px;
   }
   
-  /* Thông báo lỗi */
   .login-error {
     background-color: rgba(230, 92, 79, 0.1);
     color: var(--login-accent);
@@ -121,7 +117,6 @@
     text-align: center;
   }
   
-  /* Nhóm input */
   .login-input-group {
     margin-bottom: 1.5rem;
   }
@@ -165,7 +160,6 @@
     color: #B0B0B0;
   }
   
-  /* Tùy chọn đăng nhập */
   .login-options {
     display: flex;
     justify-content: space-between;
@@ -193,7 +187,6 @@
     text-decoration: underline;
   }
   
-  /* Nút đăng nhập */
   .login-button {
     width: 100%;
     background-color: var(--login-primary);
@@ -229,7 +222,6 @@
     transform: skewX(-15deg) translateX(200%);
   }
   
-  /* Kẻ phân chia */
   .login-divider {
     text-align: center;
     margin: 1.5rem 0;
@@ -264,8 +256,7 @@
     position: relative;
     z-index: 1;
   }
-  
-  /* Đăng nhập mạng xã hội */
+
   .login-social {
     display: flex;
     gap: 1rem;
@@ -302,7 +293,6 @@
     border-color: rgba(66, 103, 178, 0.2);
   }
   
-  /* Đăng ký */
   .login-register {
     text-align: center;
     font-size: 0.9rem;
@@ -320,7 +310,6 @@
     text-decoration: underline;
   }
   
-  /* Các yếu tố trang trí */
   .login-decoration {
     position: absolute;
     width: 100%;
@@ -350,7 +339,6 @@
     left: -50px;
   }
   
-  /* Responsive */
   @media (max-width: 768px) {
     .login-card {
       padding: 2rem;

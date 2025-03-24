@@ -1,18 +1,34 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import '../styles/Login.css'; // Tái sử dụng CSS từ Login
+import '../styles/Login.css';
 
 const Register = () => {
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (!email || !password) {
-      setError('Vui lòng nhập email và mật khẩu');
+    // Kiểm tra các trường bắt buộc
+    if (!name || !email || !password || !confirmPassword) {
+      setError('Vui lòng nhập đầy đủ tên, email, mật khẩu và xác nhận mật khẩu');
+      return;
+    }
+
+    // Kiểm tra định dạng email
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      setError('Email không hợp lệ');
+      return;
+    }
+
+    // Kiểm tra mật khẩu và xác nhận mật khẩu có khớp nhau không
+    if (password !== confirmPassword) {
+      setError('Mật khẩu và xác nhận mật khẩu không khớp');
       return;
     }
 
@@ -22,32 +38,34 @@ const Register = () => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
+        name,
         email,
-        password
+        password,
+        confirmPassword // Thêm confirmPassword vào body
       }),
     })
       .then(response => {
         if (response.status === 204) {
-          // Đăng ký thành công, không cần parse JSON vì 204 không có body
           navigate('/login');
-          return;
+          return null; // Không cần parse JSON
         }
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-        return response.json();
+        return response.json().then(data => {
+          if (!response.ok) {
+            throw new Error(data.message || `HTTP error! Status: ${response.status}`);
+          }
+          return data;
+        });
       })
       .then(data => {
-        // Xử lý response nếu có (trường hợp backend trả về JSON)
-        if (data && data.success) {
+        if (!data) return; // Nếu response là 204, data sẽ là null
+        if (data.success) {
           navigate('/login');
         } else {
-          setError(data?.message || 'Đăng ký thất bại');
+          setError(data.message || 'Đăng ký thất bại');
         }
       })
       .catch(err => {
-        // Hiển thị lỗi mà không gửi lại yêu cầu API
-        setError('Có lỗi xảy ra: ' + err.message);
+        setError(err.message);
         console.error('Register error:', err);
       });
   };
@@ -68,6 +86,34 @@ const Register = () => {
           {error && <div className="login-error">{error}</div>}
 
           <form onSubmit={handleSubmit}>
+            <div className="login-input-group">
+              <label htmlFor="name">Tên</label>
+              <div className="login-input-container">
+                <svg
+                  className="login-input-icon"
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+                <input
+                  type="text"
+                  id="name"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder="Nhập tên của bạn"
+                />
+              </div>
+            </div>
+
             <div className="login-input-group">
               <label htmlFor="email">Email</label>
               <div className="login-input-container">
@@ -120,6 +166,34 @@ const Register = () => {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Nhập mật khẩu của bạn"
+                />
+              </div>
+            </div>
+
+            <div className="login-input-group">
+              <label htmlFor="confirmPassword">Xác nhận mật khẩu</label>
+              <div className="login-input-container">
+                <svg
+                  className="login-input-icon"
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                  <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                </svg>
+                <input
+                  type="password"
+                  id="confirmPassword"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  placeholder="Xác nhận mật khẩu của bạn"
                 />
               </div>
             </div>

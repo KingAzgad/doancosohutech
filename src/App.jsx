@@ -96,7 +96,7 @@ function App() {
             isLoggedIn ? (
               <Navigate to="/" replace />
             ) : (
-              <Login setIsLoggedIn={setIsLoggedIn} /> // Truyền setIsLoggedIn xuống Login
+              <Login setIsLoggedIn={setIsLoggedIn} />
             )
           }
         />

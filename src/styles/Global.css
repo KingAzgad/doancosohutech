@@ -1,6 +1,5 @@
-/* Chứa các style chung như biến CSS (:root), reset CSS, và các style áp dụng cho toàn bộ ứng dụng. */
 :root {
-    --primary-color: #4F7CAC; /* Lighter blue as main color */
+    --primary-color: #4F7CAC;
     --primary-dark: #2D5D8A;
     --accent-color: #E65C4F;
     --background-color: #F5F7FA;
@@ -20,7 +19,6 @@
     --font-main: 'Noto Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   }
   
-  /* GENERAL STYLES */
   * {
     box-sizing: border-box;
     margin: 0;
@@ -53,7 +51,6 @@
     background: none;
   }
   
-  /* Custom scrollbar for Japanese aesthetic */
   ::-webkit-scrollbar {
     width: 8px;
     height: 8px;

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../styles/Login.css';
 
-const Login = ({ setIsLoggedIn }) => { // Nhận setIsLoggedIn từ props
+const Login = ({ setIsLoggedIn }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -25,9 +25,8 @@ const Login = ({ setIsLoggedIn }) => { // Nhận setIsLoggedIn từ props
     })
       .then(response => {
         if (response.status === 204) {
-          // Đăng nhập thành công, không có body
           localStorage.setItem('isLoggedIn', 'true');
-          setIsLoggedIn(true); // Cập nhật trạng thái isLoggedIn
+          setIsLoggedIn(true);
           navigate('/', { replace: true });
           return null;
         }
@@ -43,7 +42,7 @@ const Login = ({ setIsLoggedIn }) => { // Nhận setIsLoggedIn từ props
         if (data.success) {
           localStorage.setItem('isLoggedIn', 'true');
           localStorage.setItem('token', data.token || '');
-          setIsLoggedIn(true); // Cập nhật trạng thái isLoggedIn
+          setIsLoggedIn(true);
           navigate('/', { replace: true });
         } else {
           setError(data.message || 'Đăng nhập thất bại');

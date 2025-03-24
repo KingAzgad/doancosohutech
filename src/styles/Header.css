@@ -79,24 +79,36 @@
 .header-actions {
   display: flex;
   gap: 1.5rem;
+  align-items: center; /* Đảm bảo các nút thẳng hàng theo chiều dọc */
 }
 
 .header-action-button {
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center; /* Căn giữa theo cả chiều dọc */
   gap: 0.25rem;
   color: var(--text-secondary);
   transition: color var(--transition-speed) ease;
+  background: none; /* Đảm bảo không có background mặc định */
+  border: none; /* Đảm bảo không có border mặc định */
+  padding: 0.5rem; /* Thêm padding để nút không quá sát */
+  min-width: 60px; /* Đảm bảo các nút có chiều rộng tối thiểu giống nhau */
 }
 
 .header-action-button:hover {
   color: var(--primary-color);
 }
 
+.header-action-button svg {
+  width: 20px;
+  height: 20px;
+}
+
 .header-action-button span {
   font-size: 0.75rem;
   font-weight: 500;
+  white-space: nowrap; /* Đảm bảo text không bị xuống dòng */
 }
 
 .auth-buttons {

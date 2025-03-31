@@ -1,0 +1,142 @@
+.management-page {
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  .management-page h1 {
+    font-size: 2rem;
+    color: var(--primary-color);
+    margin-bottom: 2rem;
+    text-align: center;
+  }
+  
+  .management-error {
+    background-color: rgba(230, 92, 79, 0.1);
+    color: var(--accent-color);
+    padding: 0.8rem;
+    border-radius: var(--border-radius);
+    margin-bottom: 1.5rem;
+    font-size: 0.9rem;
+    text-align: center;
+  }
+  
+  .management-form {
+    background-color: var(--card-color);
+    padding: 1.5rem;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-light);
+    margin-bottom: 2rem;
+  }
+  
+  .management-form h2 {
+    font-size: 1.5rem;
+    color: var(--text-primary);
+    margin-bottom: 1rem;
+  }
+  
+  .form-group {
+    margin-bottom: 1rem;
+  }
+  
+  .form-group label {
+    display: block;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+    color: var(--text-primary);
+  }
+  
+  .form-group input,
+  .form-group select {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    font-size: 1rem;
+  }
+  
+  .form-group input:focus,
+  .form-group select:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px rgba(79, 124, 172, 0.1);
+  }
+  
+  .management-button {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: var(--border-radius);
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color var(--transition-speed) ease;
+    margin-right: 0.5rem;
+  }
+  
+  .management-button:hover {
+    background-color: var(--primary-dark);
+  }
+  
+  .management-button.edit {
+    background-color: #2E7D32;
+  }
+  
+  .management-button.edit:hover {
+    background-color: #1B5E20;
+  }
+  
+  .management-button.delete {
+    background-color: var(--accent-color);
+  }
+  
+  .management-button.delete:hover {
+    background-color: #d32f2f;
+  }
+  
+  .management-button.cancel {
+    background-color: #666;
+  }
+  
+  .management-button.cancel:hover {
+    background-color: #555;
+  }
+  
+  .management-list h2 {
+    font-size: 1.5rem;
+    color: var(--text-primary);
+    margin-bottom: 1rem;
+  }
+  
+  .management-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: var(--card-color);
+    box-shadow: var(--shadow-light);
+  }
+  .management-loading {
+    text-align: center;
+    color: var(--primary-color);
+    font-size: 1rem;
+    margin: 1rem 0;
+  }
+  .management-table th,
+  .management-table td {
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+  }
+  
+  .management-table th {
+    background-color: #f8f9fa;
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+  
+  .management-table td {
+    color: var(--text-secondary);
+  }
+  
+  .management-table tr:hover {
+    background-color: rgba(0, 0, 0, 0.02);
+  }

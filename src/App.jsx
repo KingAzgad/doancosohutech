@@ -8,56 +8,39 @@ import Banner from './components/Banner';
 import ProductCard from './components/ProductCard';
 import Login from './components/Login';
 import Register from './components/Register';
+import BrandLogin from './components/BrandLogin';
+import BrandRegister from './components/BrandRegister';
+import BrandManagement from './components/BrandManagement';
+import ProductManagement from './components/ProductManagement';
 
 function App() {
-  const [brands, setBrands] = useState([]);
+  const [products, setProducts] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isBrandLoggedIn, setIsBrandLoggedIn] = useState(false);
+
+  const fetchProducts = () => {
+    fetch('https://localhost:7258/api/Product')
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Không thể lấy danh sách sản phẩm');
+        }
+        return response.json();
+      })
+      .then(data => {
+        setProducts(data);
+      })
+      .catch(error => {
+        console.error('Lỗi khi lấy sản phẩm:', error);
+      });
+  };
 
   useEffect(() => {
     const userLoginStatus = localStorage.getItem('isLoggedIn');
     setIsLoggedIn(userLoginStatus === 'true');
-
-    const mockBrands = [
-      {
-        brand_id: 1,
-        name: "Murakami",
-        products: [
-          { product_id: 1, name: "Áo Thun Minimalist", price_sell: 550000, description: "Áo thun thiết kế tối giản, chất liệu cotton cao cấp" },
-          { product_id: 2, name: "Quần Jogger Unisex", price_sell: 780000, description: "Quần jogger phong cách đường phố, thoải mái" },
-          { product_id: 3, name: "Túi Tote Canvas", price_sell: 450000, description: "Túi tote đa năng với họa tiết truyền thống" },
-        ]
-      },
-      {
-        brand_id: 2,
-        name: "Sakura",
-        products: [
-          { product_id: 4, name: "Váy Linen Pastel", price_sell: 890000, description: "Váy linen nhẹ nhàng với tông màu pastel" },
-          { product_id: 5, name: "Áo Sơ Mi Oversize", price_sell: 650000, description: "Áo sơ mi rộng phong cách Nhật Bản hiện đại" },
-          { product_id: 6, name: "Mũ Bucket Thêu Hoa", price_sell: 320000, description: "Mũ bucket với hoa thêu tay tinh tế" },
-        ]
-      },
-      {
-        brand_id: 3,
-        name: "Kintsugi",
-        products: [
-          { product_id: 7, name: "Áo Khoác Denim Vintage", price_sell: 1250000, description: "Áo khoác denim phong cách retro" },
-          { product_id: 8, name: "Quần Vải Linen Rộng", price_sell: 790000, description: "Quần linen ống rộng thoáng mát" },
-          { product_id: 9, name: "Túi Đeo Chéo Mini", price_sell: 580000, description: "Túi đeo chéo nhỏ gọn, tiện lợi" },
-        ]
-      },
-      {
-        brand_id: 4,
-        name: "Ikigai",
-        products: [
-          { product_id: 10, name: "Áo Polo Premium", price_sell: 680000, description: "Áo polo chất liệu pima cotton cao cấp" },
-          { product_id: 11, name: "Quần Short Linen", price_sell: 520000, description: "Quần short linen thoáng mát cho mùa hè" },
-          { product_id: 12, name: "Áo Khoác Bomber", price_sell: 1450000, description: "Áo khoác bomber với chi tiết thêu tinh tế" },
-        ]
-      }
-    ];
-
-    setBrands(mockBrands);
+    const brandLoginStatus = localStorage.getItem('isBrandLoggedIn');
+    setIsBrandLoggedIn(brandLoginStatus === 'true');
+    fetchProducts();
   }, []);
 
   const handleSearchChange = (e) => {
@@ -68,19 +51,33 @@ function App() {
     const newLoginStatus = !isLoggedIn;
     setIsLoggedIn(newLoginStatus);
     localStorage.setItem('isLoggedIn', newLoginStatus);
+    if (!newLoginStatus) {
+      setIsBrandLoggedIn(false);
+      localStorage.removeItem('isBrandLoggedIn');
+      localStorage.removeItem('brandToken');
+    }
   };
 
-  const filteredBrands = brands.map(brand => {
-    const filteredProducts = brand.products.filter(product =>
+  const groupedProducts = products.reduce((acc, product) => {
+    const brandId = product.brandId;
+    const brandName = product.brand?.name || 'Thương hiệu không xác định';
+    const matchesSearch =
       product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      product.description.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+      (product.description && product.description.toLowerCase().includes(searchTerm.toLowerCase()));
 
-    return {
-      ...brand,
-      products: filteredProducts
-    };
-  }).filter(brand => brand.products.length > 0);
+    if (!matchesSearch) return acc;
+    if (!acc[brandId]) {
+      acc[brandId] = {
+        brandId,
+        brandName,
+        products: [],
+      };
+    }
+    acc[brandId].products.push(product);
+    return acc;
+  }, {});
+
+  const groupedProductsArray = Object.values(groupedProducts).filter(brand => brand.products.length > 0);
 
   const formatPrice = (price) => {
     return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(price);
@@ -89,7 +86,7 @@ function App() {
   return (
     <div className="app">
       <Routes>
-        {/* Route cho trang đăng nhập */}
+        {/* Route cho trang đăng nhập khách hàng */}
         <Route
           path="/login"
           element={
@@ -101,7 +98,7 @@ function App() {
           }
         />
 
-        {/* Route cho trang đăng ký */}
+        {/* Route cho trang đăng ký khách hàng */}
         <Route
           path="/register"
           element={
@@ -109,6 +106,54 @@ function App() {
               <Navigate to="/" replace />
             ) : (
               <Register />
+            )
+          }
+        />
+
+        {/* Route cho trang đăng nhập thương hiệu */}
+        <Route
+          path="/brand-login"
+          element={
+            isBrandLoggedIn ? (
+              <Navigate to="/" replace /> // Chuyển hướng về Homepage
+            ) : (
+              <BrandLogin setIsBrandLoggedIn={setIsBrandLoggedIn} />
+            )
+          }
+        />
+
+        {/* Route cho trang đăng ký thương hiệu */}
+        <Route
+          path="/brand-register"
+          element={
+            isBrandLoggedIn ? (
+              <Navigate to="/" replace />
+            ) : (
+              <BrandRegister />
+            )
+          }
+        />
+
+        {/* Route cho trang quản lý thương hiệu */}
+        <Route
+          path="/brand-management"
+          element={
+            isBrandLoggedIn ? (
+              <BrandManagement fetchProducts={fetchProducts} />
+            ) : (
+              <Navigate to="/brand-login" replace />
+            )
+          }
+        />
+
+        {/* Route cho trang quản lý sản phẩm */}
+        <Route
+          path="/product-management"
+          element={
+            isBrandLoggedIn ? (
+              <ProductManagement fetchProducts={fetchProducts} />
+            ) : (
+              <Navigate to="/brand-login" replace />
             )
           }
         />
@@ -123,20 +168,25 @@ function App() {
                 handleLoginToggle={handleLoginToggle}
                 searchTerm={searchTerm}
                 handleSearchChange={handleSearchChange}
+                isBrandLoggedIn={isBrandLoggedIn}
               />
               <Banner />
               <main className="main-content">
                 <div className="brands-container">
-                  {filteredBrands.length > 0 ? (
-                    filteredBrands.map(brand => (
-                      <section key={brand.brand_id} className="brand-section">
+                  {groupedProductsArray.length > 0 ? (
+                    groupedProductsArray.map(brand => (
+                      <section key={brand.brandId} className="brand-section">
                         <div className="brand-header">
-                          <h2 className="brand-title">{brand.name}</h2>
-                          <a href={`/brand/${brand.brand_id}`} className="view-all">Xem tất cả</a>
+                          <h2 className="brand-title">{brand.brandName}</h2>
+                          <a href={`/brand/${brand.brandId}`} className="view-all">Xem tất cả</a>
                         </div>
                         <div className="products-grid">
                           {brand.products.map(product => (
-                            <ProductCard key={product.product_id} product={product} formatPrice={formatPrice} />
+                            <ProductCard
+                              key={product.productId}
+                              product={product}
+                              formatPrice={formatPrice}
+                            />
                           ))}
                         </div>
                       </section>

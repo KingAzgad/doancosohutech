@@ -16,8 +16,8 @@ const ProductCard = ({ product, formatPrice }) => {
       </div>
       <div className="product-info">
         <h3 className="product-name">{product.name}</h3>
-        <p className="product-price">{formatPrice(product.price_sell)}</p>
-        <p className="product-description">{product.description}</p>
+        <p className="product-price">{formatPrice(product.priceSell)}</p>
+        <p className="product-description">{product.description || 'Không có mô tả'}</p>
         <button className="add-to-cart-button">Thêm vào giỏ</button>
       </div>
     </div>
